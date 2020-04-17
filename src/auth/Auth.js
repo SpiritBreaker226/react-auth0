@@ -22,6 +22,8 @@ export default class Auth {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         // set the session
+        this.setSession(authResult)
+        this.history.push('/')
       } else if (err) {
         // display error message if login has one
         this.history.push('/')
@@ -29,5 +31,17 @@ export default class Auth {
         console.warn(err)
       }
     })
+  }
+
+  setSession = (authResult) => {
+    // set the time that the access token will expire
+    const expiresAt = JSON.stringify(
+      authResult.expiresIn * 1000 + new Date().getTime()
+    )
+
+    // not requirmend but for the couse they are using localStorge for now
+    localStorage.setItem('access_token', authResult.accessToken)
+    localStorage.setItem('id_token', authResult.idToken)
+    localStorage.setItem('expires_at', expiresAt)
   }
 }
