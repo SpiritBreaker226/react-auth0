@@ -6,6 +6,7 @@ import Profile from './Profile'
 import Nav from './Nav'
 
 import Auth from './auth/Auth'
+import Callback from './auth/Callback'
 
 function App() {
   const history = useHistory()
@@ -18,6 +19,7 @@ function App() {
         <Switch>
           <Route path="/" exact render={() => <Home auth={auth} />} />
           <Route path="/profile" component={Profile} />
+          <Route path="/callback" render={() => <Callback auth={auth} />} />
         </Switch>
       </main>
     </Fragment>
