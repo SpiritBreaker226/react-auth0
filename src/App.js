@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Switch, Route, useHistory } from 'react-router-dom'
+import { Switch, Route, useHistory, Redirect } from 'react-router-dom'
 
 import Home from './Home'
 import Profile from './Profile'
@@ -18,7 +18,16 @@ function App() {
       <main className="body">
         <Switch>
           <Route path="/" exact render={() => <Home auth={auth} />} />
-          <Route path="/profile" render={() => <Profile auth={auth} />} />
+          <Route
+            path="/profile"
+            render={() =>
+              auth.isAuthenticated() ? (
+                <Profile auth={auth} />
+              ) : (
+                <Redirect to="/" />
+              )
+            }
+          />
           <Route path="/callback" render={() => <Callback auth={auth} />} />
         </Switch>
       </main>
