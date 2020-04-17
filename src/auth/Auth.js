@@ -17,4 +17,17 @@ export default class Auth {
     // redirects to the auth0 login page
     this.auth0.authorize()
   }
+
+  handleAuthentication = () => {
+    this.auth0.parseHash((err, authResult) => {
+      if (authResult && authResult.accessToken && authResult.idToken) {
+        // set the session
+      } else if (err) {
+        // display error message if login has one
+        this.history.push('/')
+        alert(`Error ${err.error}. Check the console for further details.`)
+        console.warn(err)
+      }
+    })
+  }
 }
