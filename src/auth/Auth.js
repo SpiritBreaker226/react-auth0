@@ -12,4 +12,9 @@ export default class Auth {
       scope: 'openid profile email',
     })
   }
+
+  login = () => {
+    // redirects to the auth0 login page
+    this.auth0.authorize()
+  }
 }
