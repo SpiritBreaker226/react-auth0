@@ -4,6 +4,7 @@ import { Switch, Route, useHistory, Redirect } from 'react-router-dom'
 import Home from './Home'
 import Profile from './Profile'
 import Public from './Public'
+import Private from './Private'
 import Nav from './Nav'
 
 import Auth from './auth/Auth'
@@ -30,6 +31,12 @@ function App() {
             }
           />
           <Route path="/public" component={Public} />
+          <Route
+            path="/private"
+            render={() =>
+              auth.isAuthenticated() ? <Private auth={auth} /> : auth.login()
+            }
+          />
           <Route path="/callback" render={() => <Callback auth={auth} />} />
         </Switch>
       </main>

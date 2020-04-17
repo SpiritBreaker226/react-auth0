@@ -26,6 +26,12 @@ app.get('/public', (req, res) => {
   })
 })
 
+app.get('/private', checkJwt, (req, res) => {
+  res.json({
+    message: 'Hello from a private API',
+  })
+})
+
 app.listen(process.env.REACT_APP_EXPRESS_PORT, () => {
   console.log(
     'API server is listening on',
