@@ -18,7 +18,7 @@ function App() {
       <main className="body">
         <Switch>
           <Route path="/" exact render={() => <Home auth={auth} />} />
-          <Route path="/profile" component={Profile} />
+          <Route path="/profile" render={() => <Profile auth={auth} />} />
           <Route path="/callback" render={() => <Callback auth={auth} />} />
         </Switch>
       </main>
