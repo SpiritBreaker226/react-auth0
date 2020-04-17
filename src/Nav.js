@@ -14,6 +14,9 @@ const Nav = ({ auth }) => {
           <Link to="/profile">Profile</Link>
         </li>
         <li>
+          <Link to="/public">Public</Link>
+        </li>
+        <li>
           <button onClick={isAuthenticated() ? logout : login}>
             {isAuthenticated() ? 'Log Out' : 'Log in'}
           </button>
