@@ -50,4 +50,18 @@ export default class Auth {
 
     return new Date().getTime() < expiresAt
   }
+
+  logout = () => {
+    // user out from the local computer
+    // (soft logout if you wnat to manage mutiple clients)
+    localStorage.removeItem('access_token')
+    localStorage.removeItem('id_token')
+    localStorage.removeItem('expires_at')
+
+    // logout the user from auth0
+    this.auth0.logout({
+      clientID: process.env.REACT_APP_AUTH0_CLIENTID,
+      returnTo: 'http://localhost:3000',
+    })
+  }
 }

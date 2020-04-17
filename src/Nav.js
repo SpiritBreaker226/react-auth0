@@ -1,7 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Nav = () => {
+const Nav = ({ auth }) => {
+  const { isAuthenticated, logout, login } = auth
+
   return (
     <nav>
       <ul>
@@ -10,6 +12,11 @@ const Nav = () => {
         </li>
         <li>
           <Link to="/profile">Profile</Link>
+        </li>
+        <li>
+          <button onClick={isAuthenticated() ? logout : login}>
+            {isAuthenticated() ? 'Log Out' : 'Log in'}
+          </button>
         </li>
       </ul>
     </nav>

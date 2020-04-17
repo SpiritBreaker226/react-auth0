@@ -14,7 +14,7 @@ function App() {
 
   return (
     <Fragment>
-      <Nav />
+      <Nav auth={auth} />
       <main className="body">
         <Switch>
           <Route path="/" exact render={() => <Home auth={auth} />} />
