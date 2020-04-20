@@ -1,18 +1,22 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Home = ({ auth }) => {
-  return (
-    <section>
-      <h1>Home</h1>
+import AuthContext from './AuthContext'
 
-      {auth.isAuthenticated() ? (
-        <Link to="/profile">View Profile</Link>
-      ) : (
-        <button onClick={auth.login}>Log In</button>
-      )}
-    </section>
-  )
-}
+const Home = () => (
+  <AuthContext.Consumer>
+    {(auth) => (
+      <section>
+        <h1>Home</h1>
+
+        {auth.isAuthenticated() ? (
+          <Link to="/profile">View Profile</Link>
+        ) : (
+          <button onClick={auth.login}>Log In</button>
+        )}
+      </section>
+    )}
+  </AuthContext.Consumer>
+)
 
 export default Home
