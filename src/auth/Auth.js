@@ -67,6 +67,8 @@ export default class Auth {
     _scopes = authResult.scope || this.requestedScopes || ''
 
     _accessToken = authResult.accessToken
+
+    this.scheduleTokenRenews()
   }
 
   isAuthenticated() {
@@ -103,5 +105,27 @@ export default class Auth {
     const grantedScopes = _scopes || ''
 
     return scopes.every((scope) => grantedScopes.includes(scope))
+  }
+
+  renewToken(cb) {
+    this.auth0.checkSession({}, (err, result) => {
+      if (err) {
+        console.warn(`Error: ${err.error} - ${err.errorDescription}`)
+      } else {
+        this.setSession(result)
+      }
+
+      if (cb) cb(err, result)
+    })
+  }
+
+  scheduleTokenRenews() {
+    const delay = _expiresAt - Date.now()
+
+    if (delay > 0) {
+      setTimeout(() => {
+        this.renewToken()
+      }, delay)
+    }
   }
 }

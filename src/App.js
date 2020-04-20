@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Switch, Route, useHistory } from 'react-router-dom'
 
 import Home from './Home'
@@ -17,6 +17,16 @@ import Callback from './auth/Callback'
 function App() {
   const history = useHistory()
   const auth = new Auth(history)
+  const [tokenRenewalComplete, setTokenRenewalComplete] = useState(false)
+
+  useEffect(() => {
+    auth.renewToken(() => {
+      setTokenRenewalComplete(true)
+    })
+  }, [auth])
+
+  // Show loading message until the token renewal check is completed.
+  if (!tokenRenewalComplete) return <span>Loading...</span>
 
   return (
     <AuthContext.Provider value={auth}>
