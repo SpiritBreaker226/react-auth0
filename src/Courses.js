@@ -26,7 +26,29 @@ const Courses = ({ auth }) => {
       }
     }
 
+    const fetchAdmin = async () => {
+      try {
+        const response = await fetch('/admin', {
+          headers: {
+            Authorization: `Bearer ${auth.getAccessToken()}`,
+          },
+        })
+
+        if (response.ok) {
+          const body = await response.json()
+
+          console.log(body)
+          return
+        }
+
+        throw new Error('Network response was not ok.')
+      } catch (error) {
+        setMessage(error.message)
+      }
+    }
+
     fetchCourse()
+    fetchAdmin()
   }, [auth])
 
   if (!courses) return <span>Loading...</span>
