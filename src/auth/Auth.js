@@ -12,7 +12,7 @@ export default class Auth {
       audience: process.env.REACT_APP_AUTH0_AUDIENCE,
       // token is the access token id_token is the identity token
       responseType: 'token id_token',
-      scope: 'openid profile email',
+      scope: 'openid profile email read:courses',
     })
   }
 
