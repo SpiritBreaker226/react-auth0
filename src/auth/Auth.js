@@ -1,5 +1,7 @@
 import auth0 from 'auth0-js'
 
+const REDIRECT_ON_LOGIN = 'redirect_on_login'
+
 export default class Auth {
   constructor(history) {
     this.userProfile = null
@@ -18,6 +20,11 @@ export default class Auth {
   }
 
   login = () => {
+    localStorage.setItem(
+      REDIRECT_ON_LOGIN,
+      JSON.stringify(this.history.location)
+    )
+
     // redirects to the auth0 login page
     this.auth0.authorize()
   }
@@ -27,13 +34,20 @@ export default class Auth {
       if (authResult && authResult.accessToken && authResult.idToken) {
         // set the session
         this.setSession(authResult)
-        this.history.push('/')
+
+        const redirectLocation = localStorage.getItem(REDIRECT_ON_LOGIN)
+          ? JSON.parse(localStorage.getItem(REDIRECT_ON_LOGIN))
+          : '/'
+
+        this.history.push(redirectLocation)
       } else if (err) {
         // display error message if login has one
         this.history.push('/')
         alert(`Error ${err.error}. Check the console for further details.`)
         console.warn(err)
       }
+
+      localStorage.removeItem(REDIRECT_ON_LOGIN)
     })
   }
 
