@@ -21,15 +21,27 @@ const checkJwt = jwt({
 
 const app = express()
 
+function checkRole(role) {
+  return (req, res, next) => {
+    const assignedRoles = req.user[process.env.REACT_APP_AUTH0_RULES]
+
+    if (Array.isArray(assignedRoles) && assignedRoles.includes(role)) {
+      return next()
+    }
+
+    return res.status(401).send('Insufficient role')
+  }
+}
+
 app.get('/public', (req, res) => {
   res.json({
     message: 'Hello from a public API',
   })
 })
 
-app.get('/private', checkJwt, (req, res) => {
+app.get('/admin', checkJwt, checkRole('admin'), (req, res) => {
   res.json({
-    message: 'Hello from a private API',
+    message: 'Hello from a admin API',
   })
 })
 
