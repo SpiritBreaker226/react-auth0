@@ -3,6 +3,7 @@ import auth0 from 'auth0-js'
 export default class Auth {
   constructor(history) {
     this.userProfile = null
+    this.requestedScopes = 'openid profile email read:courses'
 
     this.history = history
     this.auth0 = new auth0.WebAuth({
@@ -12,7 +13,7 @@ export default class Auth {
       audience: process.env.REACT_APP_AUTH0_AUDIENCE,
       // token is the access token id_token is the identity token
       responseType: 'token id_token',
-      scope: 'openid profile email read:courses',
+      scope: this.requestedScopes,
     })
   }
 
@@ -42,10 +43,17 @@ export default class Auth {
       authResult.expiresIn * 1000 + new Date().getTime()
     )
 
+    // If there is a value on the `scope` param from the authResult,
+    // use it to set scopes in the session for the user. Otherwise
+    // use the scopes as requested. If no scopes were requested,
+    // set it to nothing
+    const scopes = authResult.scope || this.requestedScopes || ''
+
     // not requirmend but for the couse they are using localStorge for now
     localStorage.setItem('access_token', authResult.accessToken)
     localStorage.setItem('id_token', authResult.idToken)
     localStorage.setItem('expires_at', expiresAt)
+    localStorage.setItem('scopes', JSON.stringify(scopes))
   }
 
   isAuthenticated() {
@@ -60,6 +68,8 @@ export default class Auth {
     localStorage.removeItem('access_token')
     localStorage.removeItem('id_token')
     localStorage.removeItem('expires_at')
+    localStorage.removeItem('scopes')
+
     this.userProfile = null
 
     // logout the user from auth0
@@ -87,5 +97,13 @@ export default class Auth {
 
       cb(profile, err)
     })
+  }
+
+  userHasScopes(scopes) {
+    const grantedScopes = JSON.parse(
+      localStorage.getItem('scopes') || ''
+    ).split(' ')
+
+    return scopes.every((scope) => grantedScopes.includes(scope))
   }
 }
