@@ -5,6 +5,7 @@ import Home from './Home'
 import Profile from './Profile'
 import Public from './Public'
 import Private from './Private'
+import Courses from './Courses'
 import Nav from './Nav'
 
 import Auth from './auth/Auth'
@@ -35,6 +36,16 @@ function App() {
             path="/private"
             render={() =>
               auth.isAuthenticated() ? <Private auth={auth} /> : auth.login()
+            }
+          />
+          <Route
+            path="/courses"
+            render={() =>
+              auth.isAuthenticated() && auth.userHasScopes(['read:courses']) ? (
+                <Courses auth={auth} />
+              ) : (
+                auth.login()
+              )
             }
           />
           <Route path="/callback" render={() => <Callback auth={auth} />} />
