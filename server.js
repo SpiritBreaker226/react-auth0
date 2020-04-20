@@ -1,6 +1,7 @@
 const express = require('express')
 const jwt = require('express-jwt') // validate JWT and set req.user
 const jwksRsa = require('jwks-rsa') // Retrieve RSA keys from a JSON Web Key set (JWKS) enpoint
+const checkScope = require('express-jwt-authz') // Validate JWT scopes
 
 require('dotenv').config()
 
@@ -29,6 +30,18 @@ app.get('/public', (req, res) => {
 app.get('/private', checkJwt, (req, res) => {
   res.json({
     message: 'Hello from a private API',
+  })
+})
+
+app.get('/courses', checkJwt, checkScope(['read:courses']), (req, res) => {
+  res.json({
+    courses: [
+      // NOTE: In the real word, it would read the sub (subscriber ID) from the
+      // access token and use it to query the database for the author's courses
+      // i.e. the IDs would use UUID
+      { id: 1, title: 'Building Apps with React and Redux' },
+      { id: 2, title: 'Creating Reusable React Components' },
+    ],
   })
 })
 
