@@ -1,9 +1,10 @@
 import React, { Fragment } from 'react'
-import { Switch, Route, useHistory, Redirect } from 'react-router-dom'
+import { Switch, Route, useHistory } from 'react-router-dom'
 
 import Home from './Home'
 import Profile from './Profile'
 import Public from './Public'
+import PrivateRoute from './PrivateRoute'
 import Private from './Private'
 import Courses from './Courses'
 import Nav from './Nav'
@@ -21,34 +22,16 @@ function App() {
       <main className="body">
         <Switch>
           <Route path="/" exact render={() => <Home auth={auth} />} />
-          <Route
-            path="/profile"
-            render={() =>
-              auth.isAuthenticated() ? (
-                <Profile auth={auth} />
-              ) : (
-                <Redirect to="/" />
-              )
-            }
-          />
           <Route path="/public" component={Public} />
-          <Route
-            path="/private"
-            render={() =>
-              auth.isAuthenticated() ? <Private auth={auth} /> : auth.login()
-            }
-          />
-          <Route
-            path="/courses"
-            render={() =>
-              auth.isAuthenticated() && auth.userHasScopes(['read:courses']) ? (
-                <Courses auth={auth} />
-              ) : (
-                auth.login()
-              )
-            }
-          />
           <Route path="/callback" render={() => <Callback auth={auth} />} />
+          <PrivateRoute path="/profile" auth={auth} component={Profile} />
+          <PrivateRoute path="/private" auth={auth} component={Private} />
+          <PrivateRoute
+            path="/courses"
+            component={Courses}
+            auth={auth}
+            scopes={['read:courses']}
+          />
         </Switch>
       </main>
     </Fragment>
